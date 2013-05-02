@@ -1,0 +1,5 @@
+backends:
+- name: fetcher
+  class: B4
+  instances: 1
+  options: public

@@ -1,0 +1,39 @@
+application: likeyourstatus-dev4
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+builtins:
+- remote_api: on
+- appstats: on
+- deferred: on
+libraries:
+- name: django
+  version: latest
+
+includes:
+- mapreduce/include.yaml
+
+handlers:
+- url: /bg.jpg
+  upload: index/bg.jpg
+  static_files: index/bg.jpg 
+
+- url: /stylesheets
+  static_dir: stylesheets
+
+- url: /scripts
+  static_dir: statics/scripts
+
+- url: /statics
+  static_dir: statics  
+
+
+- url: /worker/.*
+  script: main.application
+  login: admin
+- url: /.*
+  script: main.application
+
+

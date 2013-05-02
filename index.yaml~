@@ -1,0 +1,7 @@
+indexes:
+
+- kind: FileMetadata
+  properties:
+  - name: uploadedOn
+    direction: desc
+

@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Have you ever Like Your Status?</title>
+    <script type="text/javascript" src="/_ah/channel/jsapi"></script>
+     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script> 
+  </head>
+  <body>
+    {% if current_user %}
+      <p><a href="{{ current_user.profile_url }}"><img src="http://graph.facebook.com/{{ current_user.id }}/picture"/></a></p>
+      <p>You are logged in as {{ current_user.name|escape }}</p>
+      <p>Status <span id="status">Preparing...</span></p>
+      <p>I'm used to like <span id="liked"></span> my status!!!</p> 
+      <img src="/statics/troll.jpg"/>
+      <p><a href="/auth/logout">Log out</a></p>
+    {% else %}
+      <p>You are not yet logged into this site</p>
+      <p><a href="/auth/login">Log in with Facebook</a></p>
+    {% endif %}
+    
+    <h2>Scores</h2>
+    <table>
+    {% for score in scores  %}
+    <tr>
+      <td>{{score}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+   {% if current_user %}
+     <script>
+      onOpened = function() {
+        connected = true;
+      };
+      onMessage = function(data){
+        var data = jQuery.parseJSON(data['data']);
+        if (data==null){return;}
+        console.log(data);
+        $("#status").text(data['status']);
+        if((data['status']==="OK")){
+          $("#liked").text(data['data']);
+        }
+      }
+      onError = function(err){
+          console.log(err);
+      }
+      onClose = function(){
+          console.log("Close");
+      }
+      channel = new goog.appengine.Channel('{{ token }}');
+      socket = channel.open();
+      socket.onopen = onOpened;
+      socket.onmessage = onMessage;
+      socket.onerror = onError;
+      socket.onclose = onClose;
+
+     </script>
+  {% endif %}
+  </body>
+</html>
